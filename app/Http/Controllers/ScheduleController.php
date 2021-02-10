@@ -3,28 +3,34 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\Schedules;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 
-class Schedule extends Controller
+class ScheduleController extends Controller
 {
     // view
     public function index()
     {
 
 
-        $getWorkDaysForTheNextThreeMonths = $this->getWorkDaysForTheNextThreeMonths();
+       $getWorkDaysForTheNextThreeMonths = $this->getWorkDaysForTheNextThreeMonths();
+        $getDayDates = $this->getDayDates();
+//        dd($getWorkDaysForTheNextThreeMonths);
+        $loopvacuumingEveryTuesdayAndThursday = $this->loopvacuumingEveryTuesdayAndThursday();
+
         $vacuumingEveryTuesdayAndThursday = $this->vacuumingEveryTuesdayAndThursday();
         $refrigeratorCleaning = $this->refrigeratorCleaning();
         $windowsCleaning = $this->windowsCleaning();
         $nextMonths = $this->getNext3Months();
-        $loopvacuumingEveryTuesdayAndThursday = $this->loopvacuumingEveryTuesdayAndThursday();
+
         $generateCleaning = $this->generateCleaning();
 
-        dd($getWorkDaysForTheNextThreeMonths);
+//$preparedData = $this->preparedData();
+        $vacuming = $this->generatevacuming();
 
-        return view('schedule');
+        return view('schedule', compact(['vacuming']));
     }
 
 
@@ -34,12 +40,22 @@ class Schedule extends Controller
         $vacuming = $this->loopvacuumingEveryTuesdayAndThursday();
 
 
-
     }
 
+    public function generatevacuming()
+    {
+        $vacumming = $this->loopvacuumingEveryTuesdayAndThursday();
+        return $vacumming;
+    }
+
+    public function vacuming()
+    {
+        return 'cistenje';
+    }
 
     public function loopvacuumingEveryTuesdayAndThursday()
     {
+        $vacuming = $this->vacuming();
         $addMonth = $this->getNext3Months();
 
         foreach ($addMonth as $month) {
@@ -48,15 +64,13 @@ class Schedule extends Controller
             $period = CarbonPeriod::between($nowTimeDate, $lastDayofMonth)->filter('isWeekday');
             foreach ($period as $date) {
                 if ($date->isThursday() || $date->isTuesday()) {
+                    $days[] = $date->format('Y-m-d') .' ' . $this->vacuming();
+                } else {
                     $days[] = $date->format('Y-m-d');
                 }
             }
         }
         return $days;
-//      foreach($days as $day){
-//          echo "'<ul><li>$day</li></ul>'" . "vakjuming";
-//
-//      }
 
     }
 
@@ -67,11 +81,52 @@ class Schedule extends Controller
         $period = CarbonPeriod::between($nowTimeDate, $lastDayofMonth)->filter('isWeekday');
 
         foreach ($period as $date) {
-            $days[] = $date->format('Y-m-d');
+           $days[] = $date->dayName ;
+
         }
-        return $days;
+return $days;
+//
+//        $count = count($days);
+//
+//        for($i = 0; $i < $count; $i++){
+//            $data = array(
+//                'working_days' => $days[$i],
+//            );
+//
+//            $insertData[] = $data;
+//        }
+//
+//        Schedules::insert($insertData);
 
     }
+
+    public function getDayDates()
+    {
+        $nowTimeDate = Carbon::createFromDate(2021, 2, 1)->toDateString();
+        $lastDayofMonth = Carbon::parse($nowTimeDate)->endOfMonth()->addMonths(2)->toDateString();
+        $period = CarbonPeriod::between($nowTimeDate, $lastDayofMonth)->filter('isWeekday');
+
+        foreach ($period as $date) {
+            $days[] = $date->format('Y-m-d') ;
+
+        }
+//        $count = count($days);
+//
+//        for($i = 0; $i < $count; $i++){
+//            $data = array(
+//                'working_days_date' => $days[$i],
+//            );
+//
+//            $insertData[] = $data;
+//        }
+//
+//        Schedules::insert($insertData);
+
+
+      return $days;
+
+    }
+
 
     public function vacuumingEveryTuesdayAndThursday()
     {
@@ -83,7 +138,7 @@ class Schedule extends Controller
 
         foreach ($period as $date) {
             if ($date->isThursday() || $date->isTuesday()) {
-                $days[] = $date->format('Y-m-d');
+                $days[] = $date->format('Y-m-d') ;
             }
         }
         return $days;

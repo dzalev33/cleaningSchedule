@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Schedule;
+use App\Http\Controllers\MyExportImportController;
+use App\Http\Controllers\ScheduleController;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Route;
@@ -15,4 +16,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/', [Schedule::class, 'index']);
+Route::get('/', [ScheduleController::class, 'index']);
+
+
+// Export Import Controller
+Route::get('importExportView', [ MyExportImportController::class, 'importExportView' ]);
+Route::get('export', [ MyExportImportController::class, 'export' ])->name('export');
+Route::post('import', [ MyExportImportController::class, 'import' ])->name('import');

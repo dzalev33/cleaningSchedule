@@ -13,11 +13,12 @@ class CreateScheduleTable extends Migration
      */
     public function up()
     {
-        Schema::create('schedule', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->date('working_days');
-            $table->string('activities');
-            $table->string('total_time');
+            $table->string('working_days')->nullable();
+            $table->string('working_days_date')->nullable();
+            $table->string('activities')->nullable();
+            $table->string('total_time')->nullable();
             $table->timestamps();
         });
     }
