@@ -406,37 +406,24 @@
                             <thead>
                             <tr>
                                 <th scope="col">Date</th>
-
                                 <th scope="col">Day</th>
-
                             </tr>
                             </thead>
                             <tbody>
-
-{{--                            @foreach($getDayDates as $day)--}}
+                            @foreach($workingDaysDates as  $day)
                                 <tr>
                                     <td>
-{{--                                        {{ $day  }}--}}
+                                        {{ $day['working_days']  }}
                                     </td>
                                 </tr>
-{{--                            @endforeach--}}
-
-
-
+                            @endforeach
                             </tbody>
                         </table>
-
-
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-
 </div>
-
-
 </body>
 </html>

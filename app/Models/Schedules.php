@@ -8,9 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Schedules extends Model
 {
     use HasFactory;
-    protected $casts = [
-        'working_days' => 'array',
 
-    ];
-    protected $fillable = ['working_days'];
+    protected $fillable = ['working_days','working_days_date'];
 }
